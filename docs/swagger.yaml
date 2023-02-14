@@ -1,0 +1,212 @@
+basePath: /v1
+definitions:
+  model.Book:
+    properties:
+      author_name:
+        type: string
+      author_surname:
+        type: string
+      book_id:
+        type: integer
+      isbn:
+        type: string
+      published:
+        type: string
+      publisher:
+        type: string
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a simple book library server.
+  title: Book Library API
+  version: "1.0"
+paths:
+  /books:
+    get:
+      description: |-
+        For listing books per page.
+        By default will order by book_id and displays 1000 books in a page.
+      parameters:
+      - default: book_id
+        description: Order by field
+        in: query
+        name: order_by
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page_id
+        type: integer
+      - default: 25
+        description: Results per page
+        in: query
+        maximum: 1000
+        minimum: 5
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get Books
+      tags:
+      - books
+    patch:
+      consumes:
+      - application/json
+      description: |-
+        For updating a book by book_id.
+        Will return number of row that is updated, if there is no row updated, will return no data update with 0 row affected.
+      parameters:
+      - description: 'Fields Required: book_id. Empty fields will be ignored. Unique
+          fields: isbn.'
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "415":
+          description: Unsupported Media Type
+        "500":
+          description: Internal Server Error
+      summary: Update Book by book_id
+      tags:
+      - books
+    post:
+      consumes:
+      - application/json
+      description: |-
+        For inserting single/multiple books.
+        Will return number of rows that are inserted, if there is no row updated, will return no data update with 0 row affected.
+      parameters:
+      - description: 'Fields Required: ALL except book_id. Fields cannot be empty.
+          Unique fields: isbn. If book_id is included it will be ignored.'
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/model.Book'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "415":
+          description: Unsupported Media Type
+        "500":
+          description: Internal Server Error
+      summary: Insert Books
+      tags:
+      - books
+    put:
+      consumes:
+      - application/json
+      description: |-
+        For updating a book by book_id.
+        Will return number of row that is updated, if there is no row updated, will return no data update with 0 row affected.
+      parameters:
+      - description: 'Fields Required: ALL. Fields cannot be empty. Unique fields:
+          isbn.'
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "415":
+          description: Unsupported Media Type
+        "500":
+          description: Internal Server Error
+      summary: Update Book by book_id
+      tags:
+      - books
+  /books/{id}:
+    delete:
+      description: |-
+        For deleting book by id.
+        Header is required for content-type.
+        Will return number of row that is deleted, if there is no row deleted, will return no data update with 0 row affected.
+      parameters:
+      - description: The book_id to be deleted.
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Delete Book
+      tags:
+      - books
+  /books/get:
+    post:
+      consumes:
+      - application/json
+      description: For searching books with AND criteria and using WHERE column =
+        string pattern.
+      parameters:
+      - description: 'Fields Required: At least one. Empty fields will be ignored'
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "415":
+          description: Unsupported Media Type
+        "500":
+          description: Internal Server Error
+      summary: Find Matching Books
+      tags:
+      - books
+  /books/search:
+    post:
+      consumes:
+      - application/json
+      description: For searching books with OR criteria and using LIKE %string% pattern.
+      parameters:
+      - description: 'Fields Required: At least one. Empty fields will be ignored'
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "415":
+          description: Unsupported Media Type
+        "500":
+          description: Internal Server Error
+      summary: Search Books
+      tags:
+      - books
+swagger: "2.0"
