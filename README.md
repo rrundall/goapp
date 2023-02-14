@@ -9,6 +9,10 @@ A simple RestFUL API for a book Library.
 - [jmoiron/sqlx](https://github.com/jmoiron/sqlx)
 - [swaggo/swag](https://github.com/swaggo/swag)
 
+To download any missing required packages or cleanup after making code change:
+```shell
+go mod tidy
+```
 
 ## Usage
 To run:
